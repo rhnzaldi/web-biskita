@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Peta BisKita Bogor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<x-layout>
+    @section('custom-styles')
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <style>
+        <style>
         html, body { margin: 0; padding: 0; height: 100%; }
         #map { height: 100vh; width: 100%; }
         #legend {
@@ -17,7 +14,7 @@
         }
         #search-container {
             position: absolute;
-            top: 15px; left: 50%; transform: translateX(-50%);
+            top: 120px; left: 50%; transform: translateX(-50%);
             z-index: 1200;
             background: white;
             padding: 7px 10px;
@@ -86,8 +83,10 @@
             #halte-tabs button { font-size: 12px; }
         }
     </style>
-</head>
-<body>
+    @endsection
+    <x-slot:title>
+        Explore Bogor - Peta Interaktif
+    </x-slot>
     <div id="search-container">
         <input type="text" id="searchHalte" placeholder="Cari Halte...">
     </div>
@@ -300,5 +299,4 @@
         };
         L.control.layers(null, overlayMaps).addTo(map);
     </script>
-</body>
-</html>
+</x-layout>
