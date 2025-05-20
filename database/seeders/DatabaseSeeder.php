@@ -34,6 +34,11 @@ class DatabaseSeeder extends Seeder
             $item += 1;
         }
 
+        DB::table('tb_wisata')->insert([
+            ['nama' => 'Kebun Raya Bogor', 'image' => 'depot_img_1.jpg', 'kategori' => 'Taman', 'latitude' => -6.5971, 'longitude' => 106.7983],
+            ['nama' => 'Museum Zoologi', 'image' => 'depot_img_2.jpg', 'kategori' => 'Museum', 'latitude' => -6.5976, 'longitude' => 106.7995],
+        ]);
+
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',

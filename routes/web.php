@@ -1,14 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\petaInteraktif;
 
 Route::get('/', function () {
     return view('index'); 
 })->name('beranda');
 
-Route::get('/peta-interaktif', function () {
-    return view('peta'); 
-})->name('peta');
+Route::get('/peta-interaktif', [petaInteraktif::class, 'petaInteraktif'])->name('peta');
 
 Route::get('/berita-artikel', function () {
     return view('artikel'); 
