@@ -9,10 +9,10 @@
                     <h3>{{ $wisata->nama }}</h3>
                     <p>{{ $wisata->kategori }}</p>
                     <div class="btn-wrapper">
-<button class="btn btn-primary btn-lg"
-    wire:click="tampilkanDiPeta({{ $wisata->latitude ?? 'null' }}, {{ $wisata->longitude ?? 'null' }}, @js($wisata->nama ?? 'null'))">
-    Show On Map
-</button>
+                        <button class="btn btn-primary btn-lg"
+                            wire:click="tampilkanDiPeta({{ $wisata->latitude ?? 'null' }}, {{ $wisata->longitude ?? 'null' }}, @js($wisata->nama ?? 'null'))">
+                            Tampilkan di Peta
+                        </button>
                     </div>
                 </div>
             </div>
