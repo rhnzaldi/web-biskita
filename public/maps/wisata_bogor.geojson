@@ -1,0 +1,246 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Kebun Raya Bogor",
+          "kategori": "Kebun Botani",
+          "foto": "kebun_raya.png",
+          "jam": "08.00–16.00 WIB",
+          "alamat": "Jl. Ir. H. Juanda No. 13, Bogor 16122, Jawa Barat, Indonesia",
+          "google_maps": "https://maps.app.goo.gl/aHzSNrs91v2WC2Nm6",
+          "deskripsi": "Kebun Raya Bogor adalah kebun botani seluas 87 ha di pusat Kota Bogor, dioperasikan oleh BRIN, dengan lebih dari 15.000 koleksi tumbuhan tropis, berdiri sejak 1817 dan bersebelahan dengan Istana Bogor."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.8006775, -6.597245258]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Alun-Alun Kota Bogor",
+          "kategori": "Ruang Terbuka Publik",
+          "foto": "alun.png",
+          "jam": "00.00–24.00 WIB",
+          "alamat": "Jl. Kapten Muslihat No.17, RT 01/RW 01, Pabaton, Kecamatan Bogor Tengah, Bogor 16121",
+          "google_maps": "https://maps.app.goo.gl/B71D5Ws8M9RSoh9G8",
+          "deskripsi": "Alun-Alun Kota Bogor adalah taman kota dan lapangan serbaguna di pusat Bogor, kerap dipakai untuk olahraga, bermain anak, serta acara budaya; dilengkapi Wi-Fi gratis dan area kuliner malam hari."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7926149, -6.594262723]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Museum Nasional Sejarah Alam Indonesia",
+          "kategori": "Museum",
+          "foto": "nasional_sejarah.png",
+          "jam": "08.00–16.00 WIB",
+          "alamat": "Jl. Ir. H. Juanda No.13, Cibogor, Bogor 16122, Jawa Barat",
+          "google_maps": "https://maps.app.goo.gl/TiGyxfBpXA3BhgbG6",
+          "deskripsi": "Museum Nasional Sejarah Alam Indonesia (sebelumnya Museum Zoologi LIPI) menyimpan koleksi fauna Indonesia, dari fosil hingga spesimen awetan serangga, berdiri sejak 1894 di kompleks Kebun Raya Bogor."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7963101, -6.598693566]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Taman Sempur",
+          "kategori": "Taman Kota",
+          "foto": "taman_sempur.png",
+          "jam": "00.00–24.00 WIB",
+          "alamat": "Jl. Sempur Kidul, Kecamatan Bogor Tengah, Bogor 16129",
+          "google_maps": "https://maps.app.goo.gl/Kve9Bfn8EYwiq9cA6",
+          "deskripsi": "Taman Sempur adalah ruang terbuka hijau yang berada di bawah jembatan Sempur, populer untuk olahraga, bermain skateboard, atau sekadar bersantai."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.8014489, -6.591260979]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Taman Kencana",
+          "kategori": "Taman Kota",
+          "foto": "taman_kencana.png",
+          "jam": "00.00–24.00 WIB",
+          "alamat": "Jl. Salak, Babakan, Kecamatan Bogor Tengah, Bogor 16128",
+          "google_maps": "https://maps.app.goo.gl/376NuBNXAW5RKD6x7",
+          "deskripsi": "Taman Kencana merupakan taman kota bergaya kolonial yang dikelilingi oleh kafe dan restoran legendaris, cocok untuk piknik dan rekreasi keluarga."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.8014754, -6.588988087]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Museum Zoologi",
+          "kategori": "Museum",
+          "foto": "museum_zoologi.png",
+          "jam": "08.00–16.00 WIB",
+          "alamat": "Jl. Ir. H. Juanda No.9, Paledang, Bogor Tengah, Bogor 16122",
+          "google_maps": "https://maps.app.goo.gl/AhzUAsY98q5JKcvu7",
+          "deskripsi": "Museum Zoologi menyimpan ribuan koleksi fauna Indonesia seperti kerangka paus biru, serangga, burung, dan hewan khas Nusantara lainnya."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7950238, -6.60313924]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Museum & Monumen PETA",
+          "kategori": "Museum",
+          "foto": "museum_peta.png",
+          "jam": "08.00–16.00 WIB",
+          "alamat": "Jl. Jenderal Sudirman No.35, Pabaton, Bogor Tengah, Bogor 16121",
+          "google_maps": "https://maps.app.goo.gl/uwnnz8HwzL7gP4p46",
+          "deskripsi": "Museum PETA menampilkan sejarah perjuangan para tentara Pembela Tanah Air, lengkap dengan artefak, diorama, dan monumen peringatan."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7984527, -6.584518097]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Museum Tanah dan Pertanian",
+          "kategori": "Museum",
+          "foto": "museum_tanah.png",
+          "jam": "08.00–15.00 WIB",
+          "alamat": "Jl. Ir. H. Juanda No.98, Babakan, Kecamatan Bogor Tengah, Bogor 16128",
+          "google_maps": "https://maps.app.goo.gl/54JRz6tX9NyEikX6A",
+          "deskripsi": "Museum ini memamerkan perkembangan ilmu tanah dan teknologi pertanian di Indonesia, cocok untuk pelajar dan akademisi."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7987697, -6.603319154]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Bank Biji, Kebun Raya Bogor",
+          "kategori": "Museum",
+          "foto": "bank_biji.png",
+          "jam": "08.00–16.00 WIB",
+          "alamat": "Di dalam area Kebun Raya Bogor, Jl. Ir. H. Juanda No.13, Bogor",
+          "google_maps": "https://maps.app.goo.gl/z9YoyaRVEvc1c9mZA",
+          "deskripsi": "Bank Biji Kebun Raya Bogor menyimpan berbagai benih tanaman tropis penting sebagai bagian dari upaya pelestarian keanekaragaman hayati."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7976539, -6.602551802]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Museum Perjoangan Bogor",
+          "kategori": "Museum",
+          "foto": "museum_perjoangan.png",
+          "jam": "08.00–16.00 WIB",
+          "alamat": "Jl. Merdeka No.56, Ciwaringin, Kecamatan Bogor Tengah, Bogor 16124",
+          "google_maps": "https://maps.app.goo.gl/np9sUMN2oyisCDGn9",
+          "deskripsi": "Museum ini didirikan untuk mengenang perjuangan rakyat Bogor dalam mempertahankan kemerdekaan, dilengkapi koleksi sejarah, diorama, dan foto dokumentasi."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7887734, -6.592581459]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Museum Kepresidenan Balai Kirti",
+          "kategori": "Museum",
+          "foto": "balai_kirti.png",
+          "jam": "09.00–15.00 WIB",
+          "alamat": "Kompleks Istana Bogor, Jl. Ir. H. Juanda No.1, Bogor 16122",
+          "google_maps": "https://maps.app.goo.gl/9dwqKnuk1pi6oioH8",
+          "deskripsi": "Museum Balai Kirti menyajikan informasi tentang tujuh presiden Indonesia, mulai dari artefak, pidato penting, hingga peninggalan bersejarah lainnya."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7943189, -6.597858233]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Perpustakaan BBalitvet",
+          "kategori": "Perpustakaan",
+          "foto": "bbalitvet.png",
+          "jam": "08.00–16.00 WIB",
+          "alamat": "Jl. RE Martadinata No.30, Pasir Jaya, Kecamatan Bogor Barat, Bogor 16119",
+          "google_maps": "https://maps.app.goo.gl/zmNZGwMqsQSqoU9t6",
+          "deskripsi": "Perpustakaan ini merupakan pusat literatur veteriner dan penelitian hewan, dikelola oleh BBalitvet, cocok untuk akademisi dan peneliti."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7910304, -6.581743586]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "The Bucketlist Indonesia",
+          "kategori": "Wahana Hiburan",
+          "foto": "bucketlist.png",
+          "jam": "10.00–18.00 WIB",
+          "alamat": "Jl. Raya Pajajaran No.80, Baranangsiang, Bogor Timur, Bogor 16143",
+          "google_maps": "https://maps.app.goo.gl/jw6T7zZGB7UzudJ79",
+          "deskripsi": "Tempat hiburan interaktif yang menyajikan spot foto kreatif, augmented reality, dan ruang edukasi dalam bentuk permainan modern."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.8191029, -6.590559224]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Galeri Bumi Parawira",
+          "kategori": "Galeri Seni",
+          "foto": "bumi_parawira.png",
+          "jam": "09.00–17.00 WIB",
+          "alamat": "Jl. Paledang No.43, Paledang, Bogor Tengah, Bogor 16122",
+          "google_maps": "https://maps.app.goo.gl/YVzWP8mnaDeT8LRn9",
+          "deskripsi": "Galeri ini menampilkan karya seni lokal, pameran budaya, dan pelatihan kreatif untuk komunitas, terletak tidak jauh dari pusat kota."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7980106, -6.595312874]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "nama": "Pusaka Herbarium Bogoriense",
+          "kategori": "Herbarium",
+          "foto": "herbarium.png",
+          "jam": "08.00–16.00 WIB",
+          "alamat": "Jl. Ir. H. Juanda No.22-28, Bogor Tengah, Bogor 16122",
+          "google_maps": "https://maps.app.goo.gl/YqC8renMRKs5D1gS8",
+          "deskripsi": "Herbarium Bogoriense adalah salah satu pusat koleksi tumbuhan kering terbesar di Asia Tenggara yang digunakan untuk penelitian taksonomi dan ekologi tumbuhan."
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [106.7931255, -6.598794314]
+        }
+      }
+    ]
+  }
+  

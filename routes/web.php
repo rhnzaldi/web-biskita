@@ -7,7 +7,7 @@ Route::get('/', function () {
     return view('index'); 
 })->name('beranda');
 
-Route::get('/peta-interaktif', [petaInteraktif::class, 'petaInteraktif'])->name('peta');
+Route::get('/peta-interaktif', [petainteraktif::class, 'petaInteraktif'])->name('peta');
 
 Route::get('/berita-artikel', function () {
     return view('artikel'); 
