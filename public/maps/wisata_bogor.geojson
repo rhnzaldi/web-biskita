@@ -23,7 +23,7 @@
       "properties": {
         "nama": "Alun-Alun Kota Bogor",
         "halte_tujuan": "Halte Taman Topi",
-        "kategori": "Ruang Terbuka Publik",
+        "kategori": "Taman Kota ",
         "foto": "alun.png",
         "jam": "00.00–24.00 WIB",
         "alamat": "Jl. Kapten Muslihat No.17, RT 01/RW 01, Pabaton, Kecamatan Bogor Tengah, Bogor 16121",
@@ -210,7 +210,7 @@
       "properties": {
         "nama": "The Bucketlist Indonesia",
         "halte_tujuan": "Halte SMKN 3",
-        "kategori": "Wahana Hiburan",
+        "kategori": "Museum",
         "foto": "bucketlist.png",
         "jam": "10.00–18.00 WIB",
         "alamat": "Jl. Raya Pajajaran No.80, Baranangsiang, Bogor Timur, Bogor 16143",

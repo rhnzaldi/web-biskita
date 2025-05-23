@@ -1,4 +1,3 @@
-1)
 <x-layout>
 @section('custom-styles')
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -18,12 +17,19 @@
             width: 100%; height: 100%;
         }
         #legend {
-            position: absolute; bottom: 10px; left: 10px;
-            background: white; padding: 8px 10px;
-            font-size: 13px; border-radius: 5px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: white;
+            padding: 8px 10px;
+            font-size: 13px;
+            border-radius: 5px;
             box-shadow: 0 0 5px rgba(0,0,0,0.3);
             z-index: 1000;
+            max-height: 160px; /* tambahkan batas tinggi */
+            overflow-y: auto;  /* aktifkan scroll vertikal */
         }
+
         #search-container {
             position: absolute; top: 20px; left: 50%;
             transform: translateX(-50%);
@@ -193,15 +199,24 @@
     </div>
 
     <div id="legend">
-        <strong>Legenda:</strong><br>
-        <span style="color:orange;">&#8212;</span> Jalur K1<br>
-        <span style="color:cyan;">&#8212;</span> Jalur K1 (balik)<br>
-        <span style="color:green;">&#8212;</span> Jalur K2<br>
-        <span style="color:blue;">&#8212;</span> Jalur K2 (balik)<br>
-        <span style="color:blue;">●</span> Halte K1<br>
-        <span style="color:darkorange;">●</span> Halte K2<br>
-        <span style="color:red;">●</span> Wisata
+            <strong>Legenda:</strong><br>
+            <span style="color:orange;">&#8212;</span> Jalur K1<br>
+            <span style="color:cyan;">&#8212;</span> Jalur K1 (balik)<br>
+            <span style="color:green;">&#8212;</span> Jalur K2<br>
+            <span style="color:blue;">&#8212;</span> Jalur K2 (balik)<br>
+            <img src="icons/bus_k1.png" width="20" style="vertical-align:middle;"> Halte K1<br>
+            <img src="icons/bus_k2.png" width="20" style="vertical-align:middle;"> Halte K2<br>
+            <br>
+            <strong>Wisata:</strong><br>
+            <img src="icons/Galeri_Seni.png" width="20" style="vertical-align:middle;"> Galeri Seni<br>
+            <img src="icons/Herbarium.png" width="20" style="vertical-align:middle;"> Herbarium<br>
+            <img src="icons/Kebun_Botani.png" width="20" style="vertical-align:middle;"> Kebun Botani<br>
+            <img src="icons/Museum.png" width="20" style="vertical-align:middle;"> Museum<br>
+            <img src="icons/Perpustakaan.png" width="20" style="vertical-align:middle;"> Perpustakaan<br>
+            <img src="icons/Taman_Kota.png" width="20" style="vertical-align:middle;"> Taman Kota<br>
     </div>
+
+
 
     <div id="map"></div>
 
@@ -233,7 +248,7 @@
         <select id="endWisataSelect" style="flex:1; min-width:180px; padding:6px; border-radius:7px; border:1px solid #ccc;">
             <option value="">Pilih Tujuan Wisata...</option>
         </select>
-        <button id="btn-stepbystep" style="padding:8px 12px; background:#244be4; color:#fff; border:none; border-radius:7px; margin-top:4px;">Tampilkan Step-by-Step</button>
+        <button id="btn-stepbystep" style="padding:8px 12px; background:#244be4; color:#fff; border:none; border-radius:7px; margin-top:4px;">Tampilkan Rute</button>
     </div>
     <div id="stepbystep-result" style="margin-top:15px; font-size:15px; color:#333;"></div>
 </div>
@@ -292,17 +307,13 @@ Promise.all([
         allWisataFeatures = wisataData.features;
 
         L.geoJSON(wisataData, {
-            pointToLayer: (feature, latlng) => {
-                const marker = L.marker(latlng, {
-                    icon: L.icon({
-                        iconUrl: '/icons/wisata.png',
-                        iconSize: [30, 30],
-                        iconAnchor: [15, 30],
-                        popupAnchor: [0, -30]
-                    })
-                });
-                wisataMarkers.push({ marker, feature });
-                return marker;
+    pointToLayer: (feature, latlng) => {
+        const kategori = feature.properties.kategori;
+        const marker = L.marker(latlng, {
+            icon: getIconByCategory(kategori)
+        });
+        wisataMarkers.push({ marker, feature });
+        return marker;
             },
             onEachFeature: (feature, layer) => {
                 const p = feature.properties;
@@ -419,6 +430,25 @@ function renderWisataList(features) {
         container.appendChild(div);
     });
 }
+function getIconByCategory(kategori) {
+    const icons = {
+        "Museum": "Museum.png",
+        "Taman Kota": "Taman_Kota.png",
+        "Kebun Botani": "Kebun_Botani.png",
+        "Perpustakaan": "Perpustakaan.png",
+        "Herbarium": "Herbarium.png",
+        "Galeri Seni": "Galeri_Seni.png"
+    };
+
+    const iconFile = icons[kategori.trim()] || "wisata.png";
+    return L.icon({
+        iconUrl: `/icons/${iconFile}`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30]
+    });
+}
+
 
 // Filter list wisata
 document.getElementById('searchWisata').addEventListener('input', function() {
@@ -938,7 +968,7 @@ function setupStepByStepSelect() {
         // Output step list
         stepList.push(endWisata.properties.nama + " <span style='color:#244be4'>(Wisata)</span>");
         document.getElementById('stepbystep-result').innerHTML =
-            "<b>Rute Step by Step:</b><ol style='margin:0; padding-left:22px;'>" +
+            "<b>Rute:</b><ol style='margin:0; padding-left:22px;'>" +
             stepList.map(nama => `<li>${nama}</li>`).join('') +
             "</ol>" +
             `<div style="margin-top:8px; color:#555;">Total halte: <b>${stepList.length-1}</b> <br>Jarak halte ke wisata: <b>${minDist.toFixed(2)} km</b></div>`;
