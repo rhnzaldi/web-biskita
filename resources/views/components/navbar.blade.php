@@ -8,7 +8,7 @@
 
 
                 <div class="site-logo">
-                    <a href="index.html" class="text-black"><span class="text-primary">Explore Bogor</a>
+                    <a href="{{ route('beranda') }}" class="text-black"><span class="text-primary">Explore Bogor</a>
                 </div>
 
                 <div class="col-12">
@@ -36,11 +36,23 @@
                     nav-link">
                                     Kontak Kami
                                 </a></li>
-
-                            <li><button class=" btn btn-primary 
-                    nav-link" data-bs-toggle="modal"
-                                    data-bs-target="#staticBackdrop">
-                                    Login</button></li>
+                            @if (auth()->check())
+                                <li>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="nav-link btn btn-link p-0 m-0 align-baseline"
+                                            style="background: none; border: none; cursor: pointer;">
+                                            Log Out
+                                        </button>
+                                    </form>
+                                </li>
+                            @else
+                                <li><button class=" btn btn-primary 
+                    nav-link"
+                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        Login</button></li>
+                            @endif
                         </ul>
                     </nav>
                 </div>
@@ -58,20 +70,21 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">LOGIN</h1>
+                    <h1 class="modal-title fs-5 text-center fw-bold text-black" id="staticBackdropLabel">LOGIN</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="#" method="post">
-
+                    <form action="{{ route('auth') }}" method="POST">
+                        @csrf
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <input type="text" class="form-control" placeholder="username">
+                                <input type="text" class="form-control" placeholder="username" id="name"
+                                    name="name">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <input type="password" class="form-control" placeholder="Password">
+                                <input type="password" class="form-control" placeholder="Password" name="password">
                             </div>
                         </div>
 

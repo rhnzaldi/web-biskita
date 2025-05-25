@@ -6,6 +6,7 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -34,14 +35,10 @@ class DatabaseSeeder extends Seeder
             $item += 1;
         }
 
-        DB::table('tb_wisata')->insert([
-            ['nama' => 'Kebun Raya Bogor', 'image' => 'depot_img_1.jpg', 'kategori' => 'Taman', 'latitude' => -6.5971, 'longitude' => 106.7983],
-            ['nama' => 'Museum Zoologi', 'image' => 'depot_img_2.jpg', 'kategori' => 'Museum', 'latitude' => -6.5976, 'longitude' => 106.7995],
-        ]);
-
         User::factory()->create([
-            'name' => 'Test User',
+            'name' => 'admin',
             'email' => 'test@example.com',
+            'password' => Hash::make('123'),
         ]);
     }
 }
