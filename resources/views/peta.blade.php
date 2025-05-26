@@ -357,6 +357,25 @@
             popupAnchor: [0, -30]
         });
 
+        // Di luar event listener, mungkin setelah semua data halte dimuat
+        let transferPoints = [];
+        function findTransferPoints() {
+            const allHalteNamesK1 = halteK1Markers.map(m => m.feature.properties.nama_halte || m.feature.properties.nama);
+            const allHalteNamesK2 = halteK2Markers.map(m => m.feature.properties.nama_halte || m.feature.properties.nama);
+
+            transferPoints = [];
+            allHalteNamesK1.forEach(namaK1 => {
+                if (allHalteNamesK2.includes(namaK1)) {
+                    // Cari fitur halte sebenarnya untuk mendapatkan detail jika perlu
+                    const halteFeature = halteGeoFeatures.find(f => (f.properties.nama_halte || f.properties.nama) === namaK1);
+                    if (halteFeature) {
+                        transferPoints.push(halteFeature); // Simpan fitur halte transit
+                    }
+                }
+            });
+            console.log("Transfer Points:", transferPoints.map(tp => tp.properties.nama_halte || tp.properties.nama));
+        }
+
         // Load halte K1 dan K2
         Promise.all([
             fetch('/maps/biskita_k1.geojson').then(res => res.json()),
@@ -759,6 +778,8 @@
             }).addTo(halteK2Layer);
             halteK2Layer.addTo(map);
 
+            findTransferPoints(); 
+
             // Fit semua bounds
             const allBounds = L.featureGroup([
                 jalurK1Geo, jalurK1BalikGeo, jalurK2Geo, jalurK2BalikGeo, halteK1Geo, halteK2Geo
@@ -1021,7 +1042,29 @@
             });
         });
 
-        // --- STEP BY STEP RUTE ---
+        function findPathOnCorridor(startStopName, endStopName, corridorMarkers, corridorIdentity) {
+        let segmentStepListObjects = []; // Akan menyimpan objek { name, corridor }
+        const idxStart = corridorMarkers.findIndex(m => (m.feature.properties.nama_halte || m.feature.properties.nama) === startStopName);
+        const idxEnd = corridorMarkers.findIndex(m => (m.feature.properties.nama_halte || m.feature.properties.nama) === endStopName);
+
+        if (idxStart !== -1 && idxEnd !== -1) {
+            let selectedMarkers;
+            if (idxStart <= idxEnd) {
+                selectedMarkers = corridorMarkers.slice(idxStart, idxEnd + 1);
+            } else {
+                selectedMarkers = corridorMarkers.slice(idxEnd, idxStart + 1).reverse();
+            }
+            // Map ke objek yang berisi nama dan koridor
+            segmentStepListObjects = selectedMarkers.map(m => ({
+                name: m.feature.properties.nama_halte || m.feature.properties.nama,
+                corridor: corridorIdentity // Gunakan identitas koridor yang dilewatkan
+            }));
+            return segmentStepListObjects;
+        }
+        return null; // Tidak ada rute di koridor ini
+    }
+
+          // --- STEP BY STEP RUTE ---
         function setupStepByStepSelect() {
             // Tunggu data siap
             if (!Array.isArray(halteGeoFeatures) || halteGeoFeatures.length === 0 || !Array.isArray(allWisataFeatures) ||
@@ -1030,23 +1073,76 @@
                 return;
             }
 
-            // Populate options
-            const halteNames = halteGeoFeatures.map(f => f.properties.nama_halte || f.properties.nama);
-            const wisataNames = allWisataFeatures.map(f => f.properties.nama);
-
             const halteSelect = document.getElementById("startHalteSelect");
-            const wisataSelect = document.getElementById("endWisataSelect");
+            halteSelect.innerHTML = '<option value="">Pilih Halte Awal...</option>'; // Kosongkan dan tambahkan opsi default
 
-            halteSelect.innerHTML = '<option value="">Pilih Halte Awal...</option>';
-            wisataSelect.innerHTML = '<option value="">Pilih Tujuan Wisata...</option>';
+            // --- MODIFIKASI TEKS OPSI DROPDOWN DIMULAI DI SINI ---
 
-            halteNames.forEach(nama => {
+            // Buat Optgroup untuk Koridor K1
+            const optgroupK1 = document.createElement('optgroup');
+            optgroupK1.label = 'Koridor K1'; // Label grup tetap ada
+            
+            const k1Stops = halteGeoFeatures
+                .filter(f => f.properties.rute === "K1")
+                .sort((a, b) => (a.properties.urutan || 0) - (b.properties.urutan || 0)); // Urutkan berdasarkan 'urutan'
+
+            k1Stops.forEach(feature => {
+                const halteName = feature.properties.nama_halte || feature.properties.nama;
+                if (!halteName) return; // Lewati jika tidak ada nama
+
                 const opt = document.createElement('option');
-                opt.value = nama;
-                opt.textContent = nama;
-                halteSelect.appendChild(opt);
+                opt.value = halteName; // value tetap nama halte asli
+                opt.textContent = halteName; // << PERUBAHAN: Hanya nama halte untuk tampilan dropdown
+                optgroupK1.appendChild(opt);
             });
 
+            if (optgroupK1.childNodes.length > 0) {
+                halteSelect.appendChild(optgroupK1);
+            }
+
+            // Buat Optgroup untuk Koridor K2
+            const optgroupK2 = document.createElement('optgroup');
+            optgroupK2.label = 'Koridor K2'; // Label grup tetap ada
+
+            const k2Stops = halteGeoFeatures
+                .filter(f => f.properties.rute === "K2")
+                .sort((a, b) => (a.properties.urutan || 0) - (b.properties.urutan || 0)); // Urutkan berdasarkan 'urutan'
+
+            k2Stops.forEach(feature => {
+                const halteName = feature.properties.nama_halte || feature.properties.nama;
+                if (!halteName) return; // Lewati jika tidak ada nama
+
+                const opt = document.createElement('option');
+                opt.value = halteName; // value tetap nama halte asli
+                opt.textContent = halteName; // << PERUBAHAN: Hanya nama halte untuk tampilan dropdown
+                optgroupK2.appendChild(opt);
+            });
+
+            if (optgroupK2.childNodes.length > 0) {
+                halteSelect.appendChild(optgroupK2);
+            }
+
+            // (Opsional) Tangani halte yang mungkin tidak memiliki properti 'rute'
+            const otherStops = halteGeoFeatures.filter(f => !f.properties.rute || (f.properties.rute !== "K1" && f.properties.rute !== "K2"));
+            if (otherStops.length > 0) {
+                const optgroupLain = document.createElement('optgroup');
+                optgroupLain.label = 'Halte Lain';
+                otherStops.forEach(feature => {
+                    const halteName = feature.properties.nama_halte || feature.properties.nama;
+                    if (!halteName) return;
+                    const opt = document.createElement('option');
+                    opt.value = halteName;
+                    opt.textContent = halteName; // Tanpa label koridor jika tidak jelas
+                    optgroupLain.appendChild(opt);
+                });
+                halteSelect.appendChild(optgroupLain);
+            }
+            // --- AKHIR MODIFIKASI TEKS OPSI DROPDOWN ---
+
+            // Populate options untuk wisata (tidak berubah)
+            const wisataNames = allWisataFeatures.map(f => f.properties.nama);
+            const wisataSelect = document.getElementById("endWisataSelect");
+            wisataSelect.innerHTML = '<option value="">Pilih Tujuan Wisata...</option>';
             wisataNames.forEach(nama => {
                 const opt = document.createElement('option');
                 opt.value = nama;
@@ -1054,9 +1150,9 @@
                 wisataSelect.appendChild(opt);
             });
 
-            // EVENT BUTTON
+            // EVENT BUTTON (logika di dalamnya SUDAH BENAR untuk menampilkan (Kx) di HASIL RUTE)
             document.getElementById('btn-stepbystep').addEventListener('click', function() {
-                const startName = halteSelect.value;
+                const startName = halteSelect.value; // Akan mengambil nama halte murni
                 const endName = wisataSelect.value;
 
                 const startHalte = halteGeoFeatures.find(f => (f.properties.nama_halte || f.properties.nama) ===
@@ -1065,69 +1161,107 @@
 
                 if (!startHalte || !endWisata) {
                     document.getElementById('stepbystep-result').innerHTML =
-                        "<span style='color:red'>Pilih halte dan wisata yang valid.</span>";
-                    tampilkanJalurKaki("", ""); // Hapus jalur kaki jika error
+                        "<span style='color:red'>Pilih halte awal dan tujuan wisata yang valid.</span>";
+                    // tampilkanJalurKaki("", ""); // Jika fitur ini diabaikan, baris ini bisa dihapus/dikomentari
                     return;
                 }
 
-                // Cari halte terdekat ke wisata
-                let nearestHalte = null,
-                    minDist = Infinity;
-                halteGeoFeatures.forEach(h => {
-                    const coords = h.geometry.coordinates;
-                    const hLat = coords[1],
-                        hLng = coords[0];
-                    const dLat = (endWisata.geometry.coordinates[1] - hLat) * Math.PI / 180;
-                    const dLng = (endWisata.geometry.coordinates[0] - hLng) * Math.PI / 180;
-                    const a = Math.sin(dLat / 2) ** 2 +
-                        Math.cos(endWisata.geometry.coordinates[1] * Math.PI / 180) * Math.cos(hLat * Math
-                            .PI / 180) *
-                        Math.sin(dLng / 2) ** 2;
-                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                    const distance = 6371 * c;
-                    if (distance < minDist) {
-                        minDist = distance;
-                        nearestHalte = h;
-                    }
-                });
+                const targetAlightingHalteNameFromWisata = endWisata.properties.halte_tujuan;
+                // Pengecekan targetAlightingHalteNameFromWisata
+                if (!targetAlightingHalteNameFromWisata) {
+                    document.getElementById('stepbystep-result').innerHTML =
+                        `<span style='color:red'>Informasi halte tujuan untuk wisata '${endName}' tidak tersedia di data.</span>`;
+                    return;
+                }
+                const alightingStopFeature = halteGeoFeatures.find(f => (f.properties.nama_halte || f.properties.nama || '').toLowerCase() === targetAlightingHalteNameFromWisata.toLowerCase());
+                // Pengecekan alightingStopFeature
+                if (!alightingStopFeature) {
+                    document.getElementById('stepbystep-result').innerHTML =
+                        `<span style='color:red'>Halte tujuan '${targetAlightingHalteNameFromWisata}' yang direkomendasikan untuk wisata '${endName}' tidak ditemukan dalam data halte utama. Periksa kembali data GeoJSON wisata dan halte.</span>`;
+                    return;
+                }
+                const alightingStopActualName = alightingStopFeature.properties.nama_halte || alightingStopFeature.properties.nama;
+                
+                let jarakHalteWisataKm = Infinity;
+                const alightingCoords = alightingStopFeature.geometry.coordinates;
+                const wisataCoords = endWisata.geometry.coordinates;
+                const R = 6371; 
+                const dLatRad = (wisataCoords[1] - alightingCoords[1]) * Math.PI / 180;
+                const dLngRad = (wisataCoords[0] - alightingCoords[0]) * Math.PI / 180;
+                const lat1Rad = alightingCoords[1] * Math.PI / 180;
+                const lat2Rad = wisataCoords[1] * Math.PI / 180;
+                const a_dist = Math.sin(dLatRad / 2) * Math.sin(dLatRad / 2) +
+                        Math.cos(lat1Rad) * Math.cos(lat2Rad) *
+                        Math.sin(dLngRad / 2) * Math.sin(dLngRad / 2);
+                const c_dist = 2 * Math.atan2(Math.sqrt(a_dist), Math.sqrt(1 - a_dist));
+                jarakHalteWisataKm = R * c_dist;
 
-                // Cari marker K1/K2 yang sesuai
-                let stepList = [],
-                    foundRoute = false;
-                [halteK1Markers, halteK2Markers].forEach(markerArr => {
-                    if (!Array.isArray(markerArr) || markerArr.length === 0) return;
-                    const idxStart = markerArr.findIndex(m => (m.feature.properties.nama_halte || m.feature
-                        .properties.nama) === startName);
-                    const idxEnd = markerArr.findIndex(m => (m.feature.properties.nama_halte || m.feature
-                        .properties.nama) === (nearestHalte.properties.nama_halte || nearestHalte
-                        .properties.nama));
-                    if (idxStart !== -1 && idxEnd !== -1) {
-                        foundRoute = true;
-                        if (idxStart <= idxEnd) {
-                            stepList = markerArr.slice(idxStart, idxEnd + 1).map(m => m.feature.properties
-                                .nama_halte || m.feature.properties.nama);
-                        } else {
-                            stepList = markerArr.slice(idxEnd, idxStart + 1).reverse().map(m => m.feature
-                                .properties.nama_halte || m.feature.properties.nama);
+                let finalStepList = null;
+                let routeType = ""; 
+
+                let pathK1_Objects = findPathOnCorridor(startName, alightingStopActualName, halteK1Markers, "K1");
+                if (pathK1_Objects) {
+                    finalStepList = pathK1_Objects;
+                    routeType = `Langsung Koridor K1`;
+                }
+
+                if (!finalStepList) {
+                    let pathK2_Objects = findPathOnCorridor(startName, alightingStopActualName, halteK2Markers, "K2");
+                    if (pathK2_Objects) {
+                        finalStepList = pathK2_Objects;
+                        routeType = `Langsung Koridor K2`;
+                    }
+                }
+
+                if (!finalStepList && transferPoints.length > 0) {
+                    for (const transferStopFeature of transferPoints) {
+                        const transferStopName = transferStopFeature.properties.nama_halte || transferStopFeature.properties.nama;
+
+                        let segment1_K1_Objects = findPathOnCorridor(startName, transferStopName, halteK1Markers, "K1");
+                        if (segment1_K1_Objects && segment1_K1_Objects.length > 0) {
+                            let segment2_K2_Objects = findPathOnCorridor(transferStopName, alightingStopActualName, halteK2Markers, "K2");
+                            if (segment2_K2_Objects && segment2_K2_Objects.length > 1) {
+                                finalStepList = segment1_K1_Objects.concat(segment2_K2_Objects.slice(1));
+                                routeType = `Transit via ${transferStopName} (K1 -> K2)`;
+                                break; 
+                            }
+                        }
+
+                        if (finalStepList) break; 
+
+                        let segment1_K2_Objects = findPathOnCorridor(startName, transferStopName, halteK2Markers, "K2");
+                        if (segment1_K2_Objects && segment1_K2_Objects.length > 0) {
+                            let segment2_K1_Objects = findPathOnCorridor(transferStopName, alightingStopActualName, halteK1Markers, "K1");
+                            if (segment2_K1_Objects && segment2_K1_Objects.length > 1) {
+                                finalStepList = segment1_K2_Objects.concat(segment2_K1_Objects.slice(1));
+                                routeType = `Transit via ${transferStopName} (K2 -> K1)`;
+                                break; 
+                            }
                         }
                     }
-                });
-
-                if (!foundRoute) {
-                    document.getElementById('stepbystep-result').innerHTML =
-                        "<span style='color:red'>Tidak ditemukan rute halte yang menghubungkan keduanya di satu koridor.</span>";
-                    tampilkanJalurKaki("", ""); // Hapus jalur kaki jika gagal
-                    return;
                 }
 
-                // Output step list
-                stepList.push(endWisata.properties.nama + " <span style='color:#244be4'>(Wisata)</span>");
-                document.getElementById('stepbystep-result').innerHTML =
-                    "<b>Rute:</b><ol style='margin:0; padding-left:22px;'>" +
-                    stepList.map(nama => `<li>${nama}</li>`).join('') +
-                    "</ol>" +
-                    `<div style="margin-top:8px; color:#555;">Total halte: <b>${stepList.length-1}</b> <br>Jarak halte ke wisata: <b>${minDist.toFixed(2)} km</b></div>`;
-
+                if (finalStepList && finalStepList.length > 0) {
+                    let displayTextList = finalStepList.map(item => `<li>${item.name} (${item.corridor})</li>`);
+                    displayTextList.push(`<li>${endWisata.properties.nama} <span style='color:#244be4'>(Wisata)</span></li>`);
+                    let ruteInfoTambahan = "";
+                    if (routeType.includes("Transit")) {
+                        const viaHalte = routeType.split("via ")[1].split(" (")[0];
+                        const koridorAwal = routeType.includes("(K1 -> K2)") ? "K1" : "K2";
+                        const koridorBerikutnya = routeType.includes("(K1 -> K2)") ? "K2" : "K1";
+                        ruteInfoTambahan = `<br><small>Jenis Rute: ${routeType}. Turun di ${viaHalte} (${koridorAwal}), lalu lanjutkan dengan Koridor ${koridorBerikutnya}.</small>`;
+                    } else if (routeType) {
+                        ruteInfoTambahan = `<br><small>Jenis Rute: ${routeType}.</small>`;
+                    }
+                    document.getElementById('stepbystep-result').innerHTML =
+                        "<b>Rute:</b><ol style='margin:0; padding-left:22px;'>" +
+                        displayTextList.join('') +
+                        "</ol>" +
+                        `<div style="margin-top:8px; color:#555;">Total halte bus dilewati: <b>${finalStepList.length}</b> <br>Jarak dari halte terakhir ke wisata: <b>${jarakHalteWisataKm.toFixed(2)} km</b>${ruteInfoTambahan}</div>`;
+                } else {
+                    document.getElementById('stepbystep-result').innerHTML =
+                        `<span style='color:red'>Tidak ditemukan rute (langsung maupun dengan satu kali transit) dari '${startName}' ke halte tujuan '${alightingStopActualName}'.</span>`;
+                }
                 // Tampilkan JALUR KAKI otomatis
                 tampilkanJalurKaki(
                     nearestHalte.properties.nama_halte || nearestHalte.properties.nama,
